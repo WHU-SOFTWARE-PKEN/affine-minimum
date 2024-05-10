@@ -1,7 +1,7 @@
 <template>
   <ClientOnly>
     <main>
-      <WorkspaceList />
+      <Init />
     </main>
 
     <template #fallback>
@@ -9,3 +9,4 @@
     </template>
   </ClientOnly>
 </template>
+
