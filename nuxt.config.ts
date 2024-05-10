@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxt/devtools',
     '@unocss/nuxt',
+    "@nuxthub/core"
   ],
   vite: {
     define: {
