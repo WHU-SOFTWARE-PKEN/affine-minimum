@@ -26,6 +26,6 @@ export default defineNuxtConfig({
     },
   },
   hub: {
-    database: true
-  }
+    database: true,
+  },
 })
