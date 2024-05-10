@@ -25,4 +25,7 @@ export default defineNuxtConfig({
       title: 'Nuxt AFFiNE demo',
     },
   },
+  hub: {
+    database: true
+  }
 })
