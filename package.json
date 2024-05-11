@@ -2,7 +2,7 @@
   "name": "affine-demo",
   "version": "0.0.0",
   "private": true,
-  "packageManager": "npm@9.6.7",
+  "packageManager": "pnpm@8.6.3",
   "type": "module",
   "scripts": {
     "build": "nuxi build",
