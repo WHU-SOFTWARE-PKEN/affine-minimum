@@ -23,8 +23,12 @@ function handleAdd() {
     alert('Workspace ID already exists')
     return
   }
-
   workspaceIds.value.push(id)
+}
+
+function handleJumpToTestPage()
+{
+  router.push(`/notesShow`)
 }
 </script>
 
@@ -42,6 +46,8 @@ function handleAdd() {
     <div class="card !justify-center" items-center @click="handleAdd">
       <span font-bold text-lg>Add Workspace</span>
     </div>
+
+    <el-button round @click = "handleJumpToTestPage()">跳转到测试页面</el-button>
   </div>
 </template>
 

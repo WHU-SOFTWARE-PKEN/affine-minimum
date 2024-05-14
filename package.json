@@ -27,11 +27,13 @@
     "drizzle-orm": "^0.29.5",
     "lit": "^2.7.5",
     "nanoid": "^4.0.2",
+    "element-plus": "^2.7.2",
     "postgres": "^3.4.4",
     "psql": "^0.0.1",
     "yjs": "^13.6.5"
   },
   "devDependencies": {
+    "@element-plus/nuxt": "^1.0.9",
     "@nuxt/devtools": "^0.6.3",
     "@nuxthub/core": "^0.5.16",
     "@sxzz/eslint-config": "3.1.0",
