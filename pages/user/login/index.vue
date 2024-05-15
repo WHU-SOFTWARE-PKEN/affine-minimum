@@ -1,19 +1,49 @@
 <script setup lang="ts">
   import { ref } from 'vue'
-
+  import { user } from '~/server/database/schema';
+  import { drizzle } from 'drizzle-orm/postgres-js';
+  import * as schema from '~/server/database/schema';
+//   import * as buffer from "buffer"; //引入buffer
+ 
+// if (typeof (window as any).Buffer === "undefined") { // 判断当前环境是否有Buffer对象
+//    (window as any).Buffer = buffer.Buffer; // Buffer对象不存在则创建导入的buffer
+// }
+  //window.Buffer = window.Buffer || Buffer;
+  //import { userdb } from '~/composables/dbClient';
+  import { eq } from 'drizzle-orm';
+  
   const router = useRouter()
 
   const username = ref('')
   const password = ref('')
-  const showRegister = ref(false)
+
+//   const db = drizzle(queryClient, { schema: schema });
   
-  type TFn = {  
-  (e:'login-success') : void
-}
-const emit = defineEmits<TFn>()
+// //搜索指定用户
+// async function targetExisted(username: string, password: string)
+// {
+//   const Users = await db.select().from(user).where(eq(user.name,username))
+//   const target = (Users[0].password==password)
+//   return target
+// }
 
 
-  async function login() {
+// async function login() {
+//   const exist = await targetExisted(username.value,password.value)
+//   if(exist){
+//         //登陆成功
+//       alert('Login successful!')
+//       router.push(`/workspace`)
+//     } else {
+//         //登陆失败
+//       alert('Invalid username or password!')
+//     }
+//   }
+// async function goToRegister() {
+//     router.push(`/user/register`)
+// }
+
+async function login() {
     if (username.value === 'admin' && password.value === 'password') {
         //登陆成功
       alert('Login successful!')
@@ -26,6 +56,9 @@ const emit = defineEmits<TFn>()
   async function goToRegister() {
     router.push(`/user/register`)
 }
+
+
+
 </script>
 
 <template>

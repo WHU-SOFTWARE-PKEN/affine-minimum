@@ -2,7 +2,7 @@
   "name": "affine-demo",
   "version": "0.0.0",
   "private": true,
-  "packageManager": "pnpm@8.6.3", 
+  "packageManager": "pnpm@8.6.3",
   "type": "module",
   "scripts": {
     "build": "nuxi build",
@@ -24,10 +24,11 @@
     "@vueuse/nuxt": "^10.2.0",
     "@vueuse/router": "^10.2.0",
     "better-sqlite3": "^9.6.0",
+    "buffer": "^6.0.3",
     "drizzle-orm": "^0.29.5",
+    "element-plus": "^2.7.2",
     "lit": "^2.7.5",
     "nanoid": "^4.0.2",
-    "element-plus": "^2.7.2",
     "postgres": "^3.4.4",
     "psql": "^0.0.1",
     "yjs": "^13.6.5"

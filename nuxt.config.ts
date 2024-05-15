@@ -1,3 +1,10 @@
+import { Buffer } from 'buffer'
+// import inject from '@rollup/plugin-inject'
+// import Inspect from 'vite-plugin-inspect'
+globalThis.Buffer = Buffer || globalThis.Buffer
+// import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
+// import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
+
 export default defineNuxtConfig({
   css: ['@blocksuite/editor/themes/affine.css', '~/styles/global.css'],
   modules: [
@@ -11,6 +18,7 @@ export default defineNuxtConfig({
   vite: {
     define: {
       'process.env.FORCE_COLOR': 'undefined',
+      global: 'globalThis' ,
     },
   },
   typescript: {
