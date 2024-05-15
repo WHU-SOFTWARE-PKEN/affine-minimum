@@ -3,14 +3,11 @@
   import { user } from '~/server/database/schema';
   import { drizzle } from 'drizzle-orm/postgres-js';
   import * as schema from '~/server/database/schema';
-//   import * as buffer from "buffer"; //引入buffer
- 
-// if (typeof (window as any).Buffer === "undefined") { // 判断当前环境是否有Buffer对象
-//    (window as any).Buffer = buffer.Buffer; // Buffer对象不存在则创建导入的buffer
-// }
-  //window.Buffer = window.Buffer || Buffer;
-  //import { userdb } from '~/composables/dbClient';
   import { eq } from 'drizzle-orm';
+  //import { db } from '~/composables/dbClient';
+  
+
+
   
   const router = useRouter()
 
@@ -46,74 +43,87 @@
 async function login() {
     if (username.value === 'admin' && password.value === 'password') {
         //登陆成功
+      console.log("loginsuccess")
       alert('Login successful!')
       router.push(`/workspace`)
     } else {
         //登陆失败
+      console.log("failedlog")
       alert('Invalid username or password!')
     }
-  }
-  async function goToRegister() {
-    router.push(`/user/register`)
 }
 
-
+async function goToRegister() {
+  console.log("ssss")
+    router.push(`/user/register`)
+    console.log("tttt")
+}
 
 </script>
 
 <template>
     <div class="login-container">
-      <div>
-        <h2>Login</h2>
-        <form @submit.prevent="login">
-          <label for="username">Username:</label>
-          <input type="text" id="username" v-model="username" required>
-          <label for="password">Password:</label>
-          <input type="password" id="password" v-model="password" required>
-          <button @click="goToRegister()">注册</button>
-          <button type="submit">登录</button>
-          
-        </form>
+      <div class="login-inner">
+        <h2>Log in</h2>
+        <el-form status-icon label-position="top">
+          <el-form-item prop="username" label="账      户:">
+            <el-input v-model="username" placeholder="请输入用户名" />
+          </el-form-item>
+          <el-form-item prop="password" label="密      码:">
+            <el-input v-model="password" placeholder="请输入密码" show-password/>
+          </el-form-item>
+        </el-form>
+        <div class="btn-out">
+          <el-button class="btn" type="success" @click="login()">登录</el-button>
+        </div> 
+        <div class="btn-out">
+          <el-button class="btn" type="primary" @click="goToRegister()">没有账号？注册</el-button>
+        </div>
       </div>
     </div>
   </template>
 
 
-
-
-<style scoped>
+  <style scoped>
   .login-container {
-    width: 300px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
     background-color: #f9f9f9;
   }
-  form {
+  
+  .login-inner{
+    justify-content: center;
+    align-items: center;
     display: flex;
     flex-direction: column;
+    height: 400px;
+    width: 100%;
+    max-width: 280px;
+    margin: 150px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 8px;
   }
-  label {
-    margin-bottom: 5px;
-  }
-  input {
-    padding: 8px;
+    .btn-out{
+      width: 200px;
+      margin: 10px;
+      display: flex;
+    } 
+      .btn{
+        width: 100%;
+      }
+
+  h2 {
+    text-align: center;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+    padding: 7px;
+    width: 100%;
+    max-width: 120px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background-color: #fff;
+    border-radius: 8px;
   }
-  button {  
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #0056b3;
-  }
-  </style>
+ 
   
+  </style>

@@ -3,5 +3,5 @@
       <main>
         <WorkspaceList />
       </main>
-      </ClientOnly>
+    </ClientOnly>
 </template>

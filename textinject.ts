@@ -15,3 +15,4 @@ const Users = await db.select().from(user).where(eq(user.name,"admin1"))
 const target = (Users[0].password=="password1")
 
 consola.success(target)
+
