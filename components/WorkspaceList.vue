@@ -26,9 +26,17 @@ function handleAdd() {
   workspaceIds.value.push(id)
 }
 
-function handleJumpToTestPage()
+async function handleJumpToTestPage()
 {
   router.push(`/notesShow`)
+}
+
+async function handleOpenPage(workspaceId: string)
+{
+  console.log("可访问的url",router.options.routes);
+  const pageId = (await initWorkspace(workspaceId)).meta.pageMetas[0].id
+  router.push(`/${workspaceId}/${pageId}`)
+  //router.push(`/notesShow`)
 }
 </script>
 
@@ -38,7 +46,7 @@ function handleJumpToTestPage()
       v-for="id in workspaceIds"
       :key="id"
       class="card"
-      @click="handleOpen(id)"
+      @click="handleOpenPage(id)"
     >
       <span>{{ id }}</span>
       <button @click.stop="handleDelete(id)">delete</button>
