@@ -7,6 +7,7 @@ import {
     Notebook, Menu as IconMenu, CirclePlus, Setting, House, Delete, Plus, Star,StarFilled,
     ArrowLeft
 } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 const route = useRoute();
 const router = useRouter()
 // 定义 ref
@@ -40,12 +41,12 @@ function goToNote(nspaceId: string, npid: string) {
     router.push(`/space/${nspaceId}/${npid}`);
 }
 
-function handleAdd() {
+function handleAdd(id:string | null) {
     assertExists(workspace.value)
     assertExists(pages.value)
 
     // eslint-disable-next-line no-alert
-    const id = prompt('请为新建笔记命名：')
+    //const id = prompt('请为新建笔记命名：')
     if (!id) return
 
     if (pages.value.some((p) => p.id === id)) {
@@ -73,6 +74,36 @@ const starfil = ref(true);
 async function handleStar() {
   starfil.value = !starfil.value;
 }
+
+const open = () => {
+  ElMessageBox.prompt('请为新建笔记命名', '创建新笔记', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+    inputPattern: /^.{0,18}$/,
+    inputErrorMessage: '输入长度不能超过18个字符',
+  })
+    .then(({ value }) => {
+      ElMessage({
+        type: 'success',
+        message: `创建笔记${value}成功`,
+      })
+      handleAdd(value)
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '新建取消',
+      })
+    })
+}
+
+function shortenId(id:string) {
+    const maxLength = 10; // 假设您想显示最多10个字符
+    if (id.length > maxLength) {
+      return id.substring(0, maxLength) + '...';
+    }
+    return id;
+  }
 
 </script>
 
@@ -121,7 +152,7 @@ async function handleStar() {
                                         <Notebook />
                                     </el-icon>我的笔记
                                 </template>
-                                <el-menu-item-group v-for="page in pages!" :key="page.id">
+                                <el-menu-item-group class="menu-item-id" v-for="page in pages!" :key="page.id">
                                     <!-- page.title是page页面自己填入的title部分，会同时反应在左边的目录上 -->
                                     <el-menu-item @click="goToNote(spaceId, page.id)">
                                         <el-icon v-if="starfil" @click="handleStar" round>
@@ -130,20 +161,27 @@ async function handleStar() {
                                         <el-icon v-else @click="handleStar" round>
                                             <StarFilled />
                                         </el-icon>
-                                        {{ page.id }}
-                                        <el-icon v-if="pages!.length > 1" @click.stop="handleDelete(page.id)" round>
+                                        {{ shortenId(page.id) }}
+                                        <el-icon v-if="pages!.length > 1" @click.stop="handleDelete(page.id)"
+                                            style="right: -15px; margin-right: 0;" round>
                                             <delete />
                                         </el-icon>
                                     </el-menu-item>
                                 </el-menu-item-group>
-                                <el-menu-item @click="handleAdd"> 新建笔记</el-menu-item>
+                                <el-menu-item>
+                                    <el-button plain @click="open">
+                                        <el-icon>
+                                            <CirclePlus />
+                                        </el-icon>
+                                        新建笔记
+                                    </el-button>
+                                </el-menu-item>
                             </el-sub-menu>
                             <el-sub-menu index="3">
                                 <template #title>
                                     <el-icon><el-icon-star /></el-icon>我的收藏
                                 </template>
                                 <el-menu-item-group>
-                                    <template #title>Group 1</template>
                                     <el-menu-item index="2-1">Option 1</el-menu-item>
                                     <el-menu-item index="2-2">Option 2</el-menu-item>
                                 </el-menu-item-group>
@@ -151,7 +189,6 @@ async function handleStar() {
                                     <el-menu-item index="2-3">Option 3</el-menu-item>
                                 </el-menu-item-group>
                                 <el-sub-menu index="2-4">
-                                    <template #title>Option 4</template>
                                     <el-menu-item index="2-4-1">Option 4-1</el-menu-item>
                                 </el-sub-menu>
                             </el-sub-menu>
@@ -232,3 +269,13 @@ async function handleStar() {
         </el-container>
     </div>
 </template>
+
+<style scoped>
+
+.menu-item-id {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+</style>
