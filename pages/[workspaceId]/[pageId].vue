@@ -1,20 +1,51 @@
 <!-- 注意这个文件是替换了原本的index.vue，原本的index.vue现在世exam_index.vue -->
 <script setup lang="ts">
 import { useRouteParams } from '@vueuse/router'
+import { ref, onMounted, watchEffect } from 'vue'
+
+// // 定义 props
+// const props = defineProps({
+//   workspaceId: {type: String,required: true },
+//   pageId: {type: String,required: true},
+//   mode: {type: String,default: 'page'}
+// })
+const workspaceId = useRouteParams<string>('workspaceId')
+const pageId = useRouteParams<string>('pageId')
+
+// 定义 ref
+const editorContainer = ref<HTMLDivElement>()
+
+// 使用 useEditor 函数
+const editor = useEditor(workspaceId, pageId, 'page')
+
+// 等待编辑器初始化
+onMounted(async () => {
+  await until(editor).toBeTruthy()
+})
+
+// 使用 watchEffect 处理编辑器的挂载和移除
+watchEffect((onCleanup) => {
+  if (!editor.value || !editorContainer.value) return
+  const _editor = editor.value
+  editorContainer.value.appendChild(_editor)
+
+  onCleanup(() => {
+    _editor.remove()
+  })
+})
 definePageMeta({
   name: 'WorkspacePage',
 })
-const workspaceId = useRouteParams < string > ('workspaceId')
-const pageId = useRouteParams < string > ('pageId')
+
+function outParams()
+{
+  console.log("输出传入的参数",workspaceId," ",pageId)
+}
+
+onMounted(outParams);
 </script>
 
 <template>
-  <ClientOnly>
-    <Suspense>
-      <template #fallback>
-        <div>Loading...</div>
-      </template>
-      
       <div class="common-layout">
         <el-container>
           <!-- 标题栏部分 -->
@@ -24,12 +55,10 @@ const pageId = useRouteParams < string > ('pageId')
               <el-col :span="1">
                 <el-avatar src="登录者的头像URL"></el-avatar>
               </el-col>
-
               <!-- 登录者的昵称信息 -->
               <el-col :span="6">
                 <span>登录者的昵称</span>
               </el-col>
-
               <!-- 笔记软件的名称和图标 -->
               <el-col :span="12">
                 <el-menu mode="horizontal">
@@ -100,15 +129,10 @@ const pageId = useRouteParams < string > ('pageId')
             </el-aside>
 
             <el-main>
-              <Editor :workspace-id="workspaceId" :page-id="pageId" />
+              <!-- <div ref="editorContainer" class="editor-container"></div> -->
+              <NuxtLink to="/workspace">Back home</NuxtLink>
             </el-main>
           </el-container>
         </el-container>
       </div>
-    </Suspense>
-
-    <template #fallback>
-      <div>Loading...</div>
-    </template>
-  </ClientOnly>
 </template>

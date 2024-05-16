@@ -20,12 +20,13 @@ watchEffect((onCleanup) => {
 </script>
 
 <template>
-  <div ref="container" class="editor-container" />
+  <div ref="container"  />
+  <!-- class="editor-container" -->
 </template>
 
 <style scoped>
-.editor-container {
+/* .editor-container {
   width: 100vw;
   height: 100vh;
-}
+} */
 </style>
