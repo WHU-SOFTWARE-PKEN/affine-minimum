@@ -5,9 +5,15 @@ import { ref, onMounted, watchEffect } from 'vue'
 import { assertExists } from '@blocksuite/store'
 import {
     Notebook, Menu as IconMenu, CirclePlus, Setting, House, Delete, Plus, Star,StarFilled,
-    ArrowLeft
+    ArrowLeft,MoreFilled
 } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { ArrowDown } from '@element-plus/icons-vue'
+
+const handleCommand = (command: string | number | object) => {
+  ElMessage(`click on item ${command}`)
+}
+
 const route = useRoute();
 const router = useRouter()
 // 定义 ref
@@ -134,6 +140,12 @@ function stopResize() {
   document.removeEventListener('mouseup', stopResize);
 }
 
+const editing = ref(false); // 定义一个控制编辑状态的响应式引用
+
+function toggleEditing() {
+  editing.value = !editing.value; // 切换编辑状态
+}
+
 </script>
 
 <template>
@@ -151,13 +163,45 @@ function stopResize() {
                         </div>
                     </el-col>
                     <!-- 笔记软件的名称和图标 -->
-                    <el-col :span="18" style="text-align: center; font-size: 30px;">
-                        珞珈PK笔记
+                    <el-col :span="18" style="align-items: center; display: flex;
+                    gap: 24px; height: 100%; width: 100%;">
+                        <div>
+                            <div v-if="!editing" @click="toggleEditing" style="height:31px;width: 80px">{{ pid }}</div>
+                            <el-input v-else v-model="pid" style="width: 80px" autosize type="textarea"
+                                @blur="toggleEditing" placeholder="Please input" />
+                            <!-- <input  type="text" v-model="pid" @blur="toggleEditing"> -->
+                        </div>
+                        <div>
+                            <el-dropdown @command="handleCommand">
+                                <span class="el-dropdown-link">
+                                    <el-icon class="el-icon right"><MoreFilled /> </el-icon>
+                                </span>
+                                
+                                <template #dropdown>
+                                    <el-dropdown-menu>
+                                        <el-dropdown-item command="a">Action 1</el-dropdown-item>
+                                        <el-dropdown-item command="b">Action 2</el-dropdown-item>
+                                        <el-dropdown-item command="c">Action 3</el-dropdown-item>
+                                        <el-dropdown-item command="d" disabled>Action 4</el-dropdown-item>
+                                        <el-dropdown-item command="e" divided>Action 5</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </template>
+                            </el-dropdown>
+                        </div>
+                        <div>
+                            <el-icon>
+                                <Star />
+                            </el-icon>
+                        </div>
+                        <el-button type="primary" plain>珞珈PK笔记</el-button>
                     </el-col>
                     <el-col :span="2">
                         <el-menu mode="horizontal">
                             <el-menu-item index="1">
                                 <span slot="title">关于我们</span>
+                            </el-menu-item>
+                            <el-menu-item index="2">
+                                <span slot="title">分享笔记</span>
                             </el-menu-item>
                         </el-menu>
                     </el-col>
@@ -167,8 +211,8 @@ function stopResize() {
             <!-- 侧边栏部分 -->
             <el-container>
                 <div class="sidebar-resizer" @mousedown="startResize" :style="{ left: `${sidebarWidth}px` }"></div>
-                <el-aside :style="{ width: sidebarWidth + 'px' }" :data-width="sidebarWidth">
-                    <el-scrollbar>
+                <el-aside :style="{ width: sidebarWidth + 'px' }" >
+                    <el-scrollbar max-height="800px">
                         <el-menu :default-openeds="['2']">
                             <el-menu-item index="1" @click="()=>{router.push(`/workspace`)}">
                                 <template #title>
@@ -289,7 +333,7 @@ function stopResize() {
                         </el-menu>
                     </el-scrollbar>
                 </el-aside>
-                
+
                 <el-main>
                     <!-- <div ref="editorContainer"  style="text-align: left;"></div> -->
                     <Editor :workspace-id="spaceId" :page-id="pid as string" />
@@ -311,7 +355,6 @@ function stopResize() {
   position: relative;
   top: 0;
   bottom: 0;
-  /*left: var(--sidebar-width);*/
   width: 5px;
   cursor: ew-resize;
   z-index: 1000;
@@ -321,11 +364,13 @@ function stopResize() {
   position: relative;
   top: 0;
   bottom: 0;
-  overflow: hidden;
-  /*--sidebar-width: 200px;*/
 }
-/*
-.el-aside[data-width] {
-  --sidebar-width: attr(data-width px);
-}*/
+
+.example-showcase .el-dropdown-link {
+  cursor: pointer;
+  color: var(--el-color-primary);
+  display: flex;
+  align-items: center;
+}
+
 </style>
