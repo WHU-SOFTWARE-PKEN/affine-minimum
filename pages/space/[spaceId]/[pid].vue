@@ -98,12 +98,41 @@ const open = () => {
 }
 
 function shortenId(id:string) {
-    const maxLength = 10; // 假设您想显示最多10个字符
+    const maxLength = 10; 
     if (id.length > maxLength) {
       return id.substring(0, maxLength) + '...';
     }
     return id;
   }
+
+const sidebarWidth = ref(200); // 初始宽度
+const minWidth = 200; // 最小宽度
+const maxWidth = 400; // 最大宽度
+const isResizing = ref(false);
+const startWidth = ref(0);
+const startX = ref(0);
+
+function startResize(event) {
+  isResizing.value = true;
+  startX.value = event.clientX;
+  startWidth.value = sidebarWidth.value;
+  document.addEventListener('mousemove', resize);
+  document.addEventListener('mouseup', stopResize);
+}
+
+function resize(event) {
+  if (!isResizing.value) return;
+  const delta = event.clientX - startX.value;
+  let newWidth = startWidth.value + delta;
+  newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
+  sidebarWidth.value = newWidth;
+}
+
+function stopResize() {
+  isResizing.value = false;
+  document.removeEventListener('mousemove', resize);
+  document.removeEventListener('mouseup', stopResize);
+}
 
 </script>
 
@@ -116,7 +145,8 @@ function shortenId(id:string) {
                     <el-col :span="4">
                         <!-- 头像 -->
                         <div>
-                            <el-avatar src="登录者的头像URL"></el-avatar>
+                            <el-avatar
+                                src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
                             <span style="margin-left: 1px; position: relative;top: -10px; left:5px">登录者的昵称</span>
                         </div>
                     </el-col>
@@ -136,9 +166,10 @@ function shortenId(id:string) {
 
             <!-- 侧边栏部分 -->
             <el-container>
-                <el-aside width="200px">
+                <div class="sidebar-resizer" @mousedown="startResize" :style="{ left: `${sidebarWidth}px` }"></div>
+                <el-aside :style="{ width: sidebarWidth + 'px' }" :data-width="sidebarWidth">
                     <el-scrollbar>
-                        <el-menu :default-openeds="['1', '3']">
+                        <el-menu :default-openeds="['2']">
                             <el-menu-item index="1" @click="()=>{router.push(`/workspace`)}">
                                 <template #title>
                                     <el-icon>
@@ -185,9 +216,7 @@ function shortenId(id:string) {
                                     <el-menu-item index="2-1">Option 1</el-menu-item>
                                     <el-menu-item index="2-2">Option 2</el-menu-item>
                                 </el-menu-item-group>
-                                <el-menu-item-group title="Group 2">
-                                    <el-menu-item index="2-3">Option 3</el-menu-item>
-                                </el-menu-item-group>
+                                <el-menu-item index="2-3">Option 3</el-menu-item>
                                 <el-sub-menu index="2-4">
                                     <el-menu-item index="2-4-1">Option 4-1</el-menu-item>
                                 </el-sub-menu>
@@ -260,7 +289,7 @@ function shortenId(id:string) {
                         </el-menu>
                     </el-scrollbar>
                 </el-aside>
-
+                
                 <el-main>
                     <!-- <div ref="editorContainer"  style="text-align: left;"></div> -->
                     <Editor :workspace-id="spaceId" :page-id="pid as string" />
@@ -278,4 +307,25 @@ function shortenId(id:string) {
   white-space: nowrap;
 }
 
+.sidebar-resizer {
+  position: relative;
+  top: 0;
+  bottom: 0;
+  /*left: var(--sidebar-width);*/
+  width: 5px;
+  cursor: ew-resize;
+  z-index: 1000;
+}
+
+.el-aside {
+  position: relative;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+  /*--sidebar-width: 200px;*/
+}
+/*
+.el-aside[data-width] {
+  --sidebar-width: attr(data-width px);
+}*/
 </style>
