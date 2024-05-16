@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import drag from './DragBase.vue'
+import {Delete} from '@element-plus/icons-vue'
+import { ref } from "vue";
+const one = ref(true); //当one为true时执行轮播。以此来控制每次轮播图切换的张数为1
+const swiper = ref(null);
 const router = useRouter()
 
 async function handleOpen(workspaceId: string) {
@@ -23,44 +28,100 @@ function handleAdd() {
     alert('Workspace ID already exists')
     return
   }
+
   workspaceIds.value.push(id)
 }
 
-async function handleJumpToTestPage()
-{
-  router.push(`/notesShow`)
-}
-
-async function handleOpenPage(workspaceId: string)
-{
-  console.log("可访问的url",router.options.routes);
-  const pageId = (await initWorkspace(workspaceId)).meta.pageMetas[0].id
-  router.push(`/${workspaceId}/${pageId}`)
-  //router.push(`/notesShow`)
+function goWheel(event) {
+  // 当鼠标滚轮向下滚动时，其返回值大于零，向上滚动时其返回值小于零
+  if (event.deltaY > 0 && one.value) {
+    swiper.value.next();
+    one.value = false;
+    setTimeout(() => {
+      one.value = true;
+    }, 200);
+  }
+  if (event.deltaY < 0 && one.value) {
+    swiper.value.prev();
+    one.value = false;
+    setTimeout(() => {
+      one.value = true;
+    }, 200);
+  }
 }
 </script>
 
 <template>
-  <div flex="~ wrap gap5" p5 justify-start>
-    <div
-      v-for="id in workspaceIds"
-      :key="id"
-      class="card"
-      @click="handleOpenPage(id)"
-    >
-      <span>{{ id }}</span>
-      <button @click.stop="handleDelete(id)">delete</button>
+  <div class="background">
+    <drag style="cursor:pointer" @click="handleAdd"></drag>
+    <div @wheel="goWheel" >
+      <el-carousel
+          ref="swiper"
+          width="100vh"
+          height="100vh"
+          direction="vertical"
+          type="card"
+          :autoplay="false"
+          trigger="click"
+          indicator-position="none"
+      >
+        <el-carousel-item
+            v-for="id in workspaceIds"
+            :key="id"
+            class="workspaceCard"
+            @click="handleOpen(id)"
+        >
+          <h3 text="2xl" justify="center">{{ id }}</h3>
+          <el-button type="danger" :icon="Delete" plain circle @click.stop="handleDelete(id)"></el-button>
+        </el-carousel-item>
+      </el-carousel>
     </div>
-    <div class="card !justify-center" items-center @click="handleAdd">
-      <span font-bold text-lg>Add Workspace</span>
-    </div>
-
-    <el-button round @click = "handleJumpToTestPage()">跳转到测试页面</el-button>
   </div>
 </template>
 
 <style scoped>
-.card {
-  --at-apply: 'w-200px h-150px p5 rounded-5 flex flex-col justify-between shadow-md transition-all transition-delay-200 transition-ease-in-out cursor-pointer';
+.background {
+  position: relative; /* 添加 position: relative; 让子元素定位相对于此 */
+  width: 100%;
+  height: 100vh;
+  background-color: transparent;
+  background-image: url("./background_notepad.jpg");
+  background-size: cover; /* 使用 cover 保持图片比例并覆盖整个容器 */
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(8px); 
+}
+.workspaceCard {
+  width: 60%;
+  height: 50%;
+  border-radius: 50px; 
+  transition: transform 0.3s, box-shadow 0.3s; 
+  text-align: center;
+  left:20%;
+  border-style: solid
+}
+.workspaceCard:hover{
+  box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.5); 
+}
+.el-carousel__item h3 {
+  color: black;
+  font-style: italic;
+  line-height: 200px;
+  text-align: center;
+}
+.el-carousel__item:nth-child(2n) {
+  background-color:blanchedalmond;
+}
+.el-carousel__item:nth-child(2n+1) {
+  background-color:burlywood;
 }
 </style>
