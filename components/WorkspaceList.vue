@@ -8,7 +8,7 @@ const router = useRouter()
 
 async function handleOpen(workspaceId: string) {
   const pageId = (await initWorkspace(workspaceId)).meta.pageMetas[0].id
-  router.push(`/${workspaceId}/${pageId}`)
+  router.push(`space/${workspaceId}/${pageId}`)
 }
 
 async function handleDelete(id: string) {
