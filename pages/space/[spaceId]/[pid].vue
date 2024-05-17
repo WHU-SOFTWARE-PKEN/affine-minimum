@@ -5,7 +5,7 @@ import { ref, onMounted, watchEffect } from 'vue'
 import { assertExists } from '@blocksuite/store'
 import {
     Notebook, Menu as IconMenu, CirclePlus, Setting, House, Delete, Plus, Star,StarFilled,
-    ArrowLeft,MoreFilled
+    ArrowLeft,MoreFilled,Notification
 } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ArrowDown } from '@element-plus/icons-vue'
@@ -22,7 +22,7 @@ const editorContainer = ref<HTMLDivElement>()
 const spaceId = route.params.spaceId as string;
 const pid = ref(route.params.pid);
 const editor = useEditor(spaceId, pid, 'page')
-
+const visible = ref(false)
 const { workspace, pages } = useWorkspace(spaceId)
 // 等待编辑器初始化
 onMounted(async () => {
@@ -146,6 +146,19 @@ function toggleEditing() {
   editing.value = !editing.value; // 切换编辑状态
 }
 
+// 用于存储每个页面的标星状态
+const starred = ref({});
+// 用于控制每个popover的可见性
+const popoverVisible = ref({});
+// 标星逻辑
+function toggleStar(pageId) {
+  starred.value[pageId] = !starred.value[pageId];
+}
+// 检查页面是否标星
+function isStarred(pageId) {
+  return starred.value[pageId];
+}
+
 </script>
 
 <template>
@@ -165,35 +178,49 @@ function toggleEditing() {
                     <!-- 笔记软件的名称和图标 -->
                     <el-col :span="18" style="align-items: center; display: flex;
                     gap: 24px; height: 100%; width: 100%;">
-                        <div>
+                        <el-tooltip class="box-item" effect="light" content="Workspace" placement="bottom">
+                            <div style="height:31px;">
+                                <el-icon style="position: relative;top: 4px;">
+                                    <Notification />
+                                </el-icon>
+                                {{ spaceId }}
+                            </div>
+                        </el-tooltip>
+                        <div style="gap :3px">
                             <div v-if="!editing" @click="toggleEditing" style="height:31px;width: 80px">{{ pid }}</div>
                             <el-input v-else v-model="pid" style="width: 80px" autosize type="textarea"
                                 @blur="toggleEditing" placeholder="Please input" />
-                            <!-- <input  type="text" v-model="pid" @blur="toggleEditing"> -->
                         </div>
                         <div>
                             <el-dropdown @command="handleCommand">
                                 <span class="el-dropdown-link">
-                                    <el-icon class="el-icon right"><MoreFilled /> </el-icon>
+                                    <el-icon class="el-icon right">
+                                        <MoreFilled />
+                                    </el-icon>
                                 </span>
-                                
+
                                 <template #dropdown>
                                     <el-dropdown-menu>
-                                        <el-dropdown-item command="a">Action 1</el-dropdown-item>
-                                        <el-dropdown-item command="b">Action 2</el-dropdown-item>
-                                        <el-dropdown-item command="c">Action 3</el-dropdown-item>
-                                        <el-dropdown-item command="d" disabled>Action 4</el-dropdown-item>
-                                        <el-dropdown-item command="e" divided>Action 5</el-dropdown-item>
+                                        <el-dropdown-item command="a">重命名</el-dropdown-item>
+                                        <el-dropdown-item command="b">加入收藏</el-dropdown-item>
+                                        <el-dropdown-item command="c" divided>复制</el-dropdown-item>
+                                        <el-dropdown-item command="d">导入</el-dropdown-item>
+                                        <el-dropdown-item command="e" divided>导出</el-dropdown-item>
                                     </el-dropdown-menu>
                                 </template>
                             </el-dropdown>
                         </div>
                         <div>
-                            <el-icon>
-                                <Star />
-                            </el-icon>
+                            <el-tooltip class="box-item" effect="dark" content="收藏" placement="bottom">
+                                <el-icon>
+                                    <Star />
+                                </el-icon>
+                            </el-tooltip>
                         </div>
-                        <el-button type="primary" plain>珞珈PK笔记</el-button>
+                        <nuxt-link to="/workspace">
+                            <el-button type="primary" plain>回到主页</el-button>
+                        </nuxt-link>
+
                     </el-col>
                     <el-col :span="2">
                         <el-menu mode="horizontal">
@@ -211,7 +238,7 @@ function toggleEditing() {
             <!-- 侧边栏部分 -->
             <el-container>
                 <div class="sidebar-resizer" @mousedown="startResize" :style="{ left: `${sidebarWidth}px` }"></div>
-                <el-aside :style="{ width: sidebarWidth + 'px' }" >
+                <el-aside :style="{ width: sidebarWidth + 'px' }">
                     <el-scrollbar max-height="800px">
                         <el-menu :default-openeds="['2']">
                             <el-menu-item index="1" @click="()=>{router.push(`/workspace`)}">
@@ -230,17 +257,30 @@ function toggleEditing() {
                                 <el-menu-item-group class="menu-item-id" v-for="page in pages!" :key="page.id">
                                     <!-- page.title是page页面自己填入的title部分，会同时反应在左边的目录上 -->
                                     <el-menu-item @click="goToNote(spaceId, page.id)">
-                                        <el-icon v-if="starfil" @click="handleStar" round>
+                                        <el-icon v-if="!isStarred(page.id)" @click="toggleStar(page.id)" round>
                                             <star />
                                         </el-icon>
-                                        <el-icon v-else @click="handleStar" round>
+                                        <el-icon v-else @click="toggleStar(page.id)" round>
                                             <StarFilled />
                                         </el-icon>
                                         {{ shortenId(page.id) }}
-                                        <el-icon v-if="pages!.length > 1" @click.stop="handleDelete(page.id)"
-                                            style="right: -15px; margin-right: 0;" round>
-                                            <delete />
-                                        </el-icon>
+                                        <el-popover :visible="popoverVisible[page.id]"  placement="top" :width="160">
+                                            <p>Are you sure to delete this?</p>
+                                            <div style="text-align: right; margin: 0">
+                                                <el-button size="small" text @click="popoverVisible[page.id] = false">cancel</el-button>
+                                                <el-button size="small" type="primary"
+                                                    @click="popoverVisible[page.id] = false; handleDelete(page.id)">
+                                                    confirm
+                                                </el-button>
+                                            </div>
+                                            <template #reference>
+                                                <el-icon v-if="pages!.length > 1" @click="popoverVisible[page.id] = true"
+                                                    style="right: -15px; margin-right: 0;" round>
+                                                    <delete />
+                                                </el-icon>
+                                            </template>
+                                        </el-popover>
+
                                     </el-menu-item>
                                 </el-menu-item-group>
                                 <el-menu-item>
