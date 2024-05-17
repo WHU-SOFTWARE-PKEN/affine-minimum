@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref } from 'vue'
-  import { user } from '~/server/database/schema';
+  import { users } from '~/server/database/schema';
   import { drizzle } from 'drizzle-orm/postgres-js';
   import * as schema from '~/server/database/schema';
   import { eq } from 'drizzle-orm';

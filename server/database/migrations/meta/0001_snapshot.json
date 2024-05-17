@@ -1,11 +1,11 @@
 {
-  "id": "50881980-a8dd-4245-ae5d-d839d88cc558",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "bdb8791c-dd1d-4995-aa2a-f6e5bd8e8b69",
+  "prevId": "50881980-a8dd-4245-ae5d-d839d88cc558",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
-    "public.user": {
-      "name": "user",
+    "public.users": {
+      "name": "users",
       "schema": "",
       "columns": {
         "id": {
