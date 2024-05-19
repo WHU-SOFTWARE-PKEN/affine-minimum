@@ -16,7 +16,7 @@
 
 // consola.success(target)
 
-    import { SelectAllUsers } from "./server/database/api/Select";
+    import { SelectAllUsers } from "./server/api/Select";
 
     const Users = await SelectAllUsers();
         Users.forEach((user, index) => {

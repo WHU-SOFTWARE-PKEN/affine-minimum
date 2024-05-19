@@ -4,9 +4,6 @@
   import { drizzle } from 'drizzle-orm/postgres-js';
   import * as schema from '~/server/database/schema';
   import { eq } from 'drizzle-orm';
-  //import { db } from '~/composables/dbClient';
-  
-
 
   
   const router = useRouter()
@@ -14,50 +11,51 @@
   const username = ref('')
   const password = ref('')
 
-//   const db = drizzle(queryClient, { schema: schema });
   
-// //搜索指定用户
-// async function targetExisted(username: string, password: string)
-// {
-//   const Users = await db.select().from(user).where(eq(user.name,username))
-//   const target = (Users[0].password==password)
-//   return target
-// }
-
-
-// async function login() {
-//   const exist = await targetExisted(username.value,password.value)
-//   if(exist){
-//         //登陆成功
-//       alert('Login successful!')
-//       router.push(`/workspace`)
-//     } else {
-//         //登陆失败
-//       alert('Invalid username or password!')
-//     }
-//   }
-// async function goToRegister() {
-//     router.push(`/user/register`)
-// }
+//搜索指定用户
+async function beforelogin(Name:string,Password:string) {
+ 
+  console.log(Name+'222')
+  const target = await $fetch('/api/CheckUsernameAndPassword', {
+    params: { Name,Password }
+  })
+  console.log("123456")
+  return target
+  //使用返回的数据
+  console.log(target)
+}
 
 async function login() {
-    if (username.value === 'admin' && password.value === 'password') {
+  const exist = await beforelogin(username.value,password.value)
+  if(exist){
         //登陆成功
-      console.log("loginsuccess")
       alert('Login successful!')
       router.push(`/workspace`)
     } else {
         //登陆失败
-      console.log("failedlog")
       alert('Invalid username or password!')
     }
+  }
+async function goToRegister() {
+    router.push(`/user/register`)
 }
 
-async function goToRegister() {
-  console.log("ssss")
-    router.push(`/user/register`)
-    console.log("tttt")
-}
+// async function login() {
+//     if (username.value === 'admin' && password.value === 'password') {
+//         //登陆成功
+//       console.log("loginsuccess")
+//       alert('Login successful!')
+//       router.push(`/workspace`)
+//     } else {
+//         //登陆失败
+//       console.log("failedlog")
+//       alert('Invalid username or password!')
+//     }
+// }
+
+// async function goToRegister() {
+//     router.push(`/user/register`)
+// }
 
 </script>
 
@@ -97,9 +95,8 @@ async function goToRegister() {
     align-items: center;
     display: flex;
     flex-direction: column;
-    height: 400px;
     width: 100%;
-    max-width: 280px;
+    max-width: 350px;
     margin: 150px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     background-color: #fff;

@@ -1,7 +1,7 @@
 import { Buffer } from 'buffer'
 // import inject from '@rollup/plugin-inject'
 // import Inspect from 'vite-plugin-inspect'
-globalThis.Buffer = Buffer || globalThis.Buffer
+global.Buffer = Buffer || global.Buffer
 // import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 // import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill'
 
