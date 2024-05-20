@@ -15,6 +15,13 @@
       "when": 1715867990559,
       "tag": "0001_new_patriot",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1716204978402,
+      "tag": "0002_closed_professor_monster",
+      "breakpoints": true
     }
   ]
 }
