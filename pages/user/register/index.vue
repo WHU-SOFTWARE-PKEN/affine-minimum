@@ -36,7 +36,7 @@ async function Isukuser(Name:string) {
 
   async function handleRegister() {
     const uquser = await Isukuser(username.value)
-    if(uquser){
+    if(uquser||username.value==='undefined'){
       alert('username is used，please change your username')
     } 
     else if (password.value === password2.value && password.value !== '') {

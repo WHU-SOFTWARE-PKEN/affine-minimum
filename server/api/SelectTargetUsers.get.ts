@@ -10,7 +10,7 @@ export default defineEventHandler(async (context) => {
     const query = getQuery(context);
     console.log(query);
     const {Name} = query;
-    const name = Name.toString();
+    const name = Name?.toString()||'undefined';
     console.log(name)
     // 对数据库执行查询操作
     const Users = await db.select().from(users).where(eq(users.name,name))

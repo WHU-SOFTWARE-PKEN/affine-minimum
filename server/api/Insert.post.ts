@@ -2,6 +2,7 @@ import { db } from "~/server/database/queryClient"
 import { users } from '~/server/database/schema';
 
 
+
 export default defineEventHandler(async (res) => {
   const { username, password } = await readBody(res)
   console.log(username)

@@ -1,61 +1,39 @@
 <script setup lang="ts">
   import { ref } from 'vue'
-  import { users } from '~/server/database/schema';
-  import { drizzle } from 'drizzle-orm/postgres-js';
-  import * as schema from '~/server/database/schema';
-  import { eq } from 'drizzle-orm';
 
-  
   const router = useRouter()
-
+  const cookie_username = useCookie('user')
   const username = ref('')
   const password = ref('')
 
-  
-//搜索指定用户
+
+//判断有无用户前端api
 async function beforelogin(Name:string,Password:string) {
- 
-  console.log(Name+'222')
+  console.log(Name+'name')
   const target = await $fetch('/api/CheckUsernameAndPassword', {
     params: { Name,Password }
   })
-  console.log("123456")
   return target
-  //使用返回的数据
-  console.log(target)
 }
 
 async function login() {
   const exist = await beforelogin(username.value,password.value)
-  if(exist){
-        //登陆成功
+  if(exist){ //登陆成功
+      //设置cookie
+      cookie_username.value = username.value
+      console.log(cookie_username.value+'cookiesucc')
       alert('Login successful!')
+      //跳转
       router.push(`/workspace`)
     } else {
         //登陆失败
+        console.log(cookie_username.value+'cookiefailed')
       alert('Invalid username or password!')
     }
   }
 async function goToRegister() {
     router.push(`/user/register`)
 }
-
-// async function login() {
-//     if (username.value === 'admin' && password.value === 'password') {
-//         //登陆成功
-//       console.log("loginsuccess")
-//       alert('Login successful!')
-//       router.push(`/workspace`)
-//     } else {
-//         //登陆失败
-//       console.log("failedlog")
-//       alert('Invalid username or password!')
-//     }
-// }
-
-// async function goToRegister() {
-//     router.push(`/user/register`)
-// }
 
 </script>
 

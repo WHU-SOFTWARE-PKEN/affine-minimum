@@ -9,14 +9,14 @@ export default defineEventHandler(async (context) => {
     const query = getQuery(context);
     console.log(query+"query");
     const {Name,Password} = query;
-    const name:string = Name.toString();
-    const password:string = Password.toString()
+    const name:string = Name?.toString()||'undefined'
+    const password:string = Password?.toString()||'undefined'
     console.log(name+'name')
     console.log(password+"password");
     // 对数据库执行查询操作
     const Users = await db.select().from(users).where(eq(users.name,name))
-    console.log(Users[0])
-    const target = (Users)&&(Users[0].password==password)
+    console.log(Users)
+    const target = (Users.length)&&(Users[0].password===password)
     console.log(target+'target')
     return target
   });
