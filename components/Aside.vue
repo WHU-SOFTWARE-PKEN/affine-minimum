@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useRouteParams } from '@vueuse/router'
 import { ref, onMounted, watchEffect } from 'vue'
 import { assertExists } from '@blocksuite/store'
 import {
@@ -113,12 +112,6 @@ function stopResize() {
   document.removeEventListener('mouseup', stopResize);
 }
 
-const editing = ref(false); // 定义一个控制编辑状态的响应式引用
-
-function toggleEditing() {
-  editing.value = !editing.value; // 切换编辑状态
-}
-
 // 用于存储每个页面的标星状态
 const starred = ref({});
 // 用于控制每个popover的可见性
@@ -135,6 +128,7 @@ function isStarred(pageId) {
 </script>
 
 <template>
+    <div class="sidebar-resizer" @mousedown="startResize" :style="{ left: `${sidebarWidth}px` }"></div>
     <el-aside :style="{ width: sidebarWidth + 'px' }">
                     <el-scrollbar max-height="800px">
                         <el-menu :default-openeds="['2']">
@@ -271,3 +265,20 @@ function isStarred(pageId) {
                     </el-scrollbar>
                 </el-aside>
 </template>
+
+<style scoped>
+.sidebar-resizer {
+  position: relative;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  cursor: ew-resize;
+  z-index: 1000;
+}
+
+.el-aside {
+  position: relative;
+  top: 0;
+  bottom: 0;
+}
+</style>

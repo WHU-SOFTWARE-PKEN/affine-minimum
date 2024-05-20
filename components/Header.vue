@@ -12,6 +12,12 @@ import { ArrowDown } from '@element-plus/icons-vue'
 const route = useRoute()
 const spaceId = route.params.spaceId as string;
 const pid = ref(route.params.pid);
+
+const editing = ref(false); // 定义一个控制编辑状态的响应式引用
+
+function toggleEditing() {
+  editing.value = !editing.value; // 切换编辑状态
+}
 </script>
 <template>
     <el-row type="flex" justify="start" align="middle">
