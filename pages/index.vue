@@ -1,14 +1,14 @@
 
 
 <template>
-  <ClientOnly>
+  
     <main>
       
       <!-- Your Init component will be placed here and only rendered client-side -->
       <Init />
     </main>
 
-  </ClientOnly>
+  
 </template>
 
 <style scoped>

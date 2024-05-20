@@ -22,10 +22,10 @@ async function handleOpenRegi() {
         </div>
         <div class="flex">
         <el-button type="primary"  @click="handleOpenlogin()" >
-            Log In
+          登录
         </el-button>
         <el-button type="primary" @click="handleOpenRegi()" >
-          Sign Up
+          注册
         </el-button>
       </div>
     </div>

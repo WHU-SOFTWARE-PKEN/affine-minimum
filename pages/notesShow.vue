@@ -14,7 +14,6 @@ const pageId = useRouteParams<string>('pageId')
       <template #fallback>
         <div>Loading...</div>
       </template>
-
       <div class="common-layout">
         <el-container>
           <!-- 标题栏部分 -->
@@ -104,9 +103,5 @@ const pageId = useRouteParams<string>('pageId')
         </el-container>
       </div>
     </Suspense>
-
-    <template #fallback>
-      <div>Loading...</div>
-    </template>
   </ClientOnly>
 </template>

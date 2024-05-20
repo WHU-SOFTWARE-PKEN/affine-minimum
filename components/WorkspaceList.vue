@@ -30,6 +30,8 @@ function handleAdd() {
   }
 
   workspaceIds.value.push(id)
+  console.log(workspaceIds.value)
+  console.log("可访问的url",router.options.routes);
 }
 
 function goWheel(event) {
