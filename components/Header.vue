@@ -3,11 +3,9 @@ import { useRouteParams } from '@vueuse/router'
 import { ref, onMounted, watchEffect } from 'vue'
 import { assertExists } from '@blocksuite/store'
 import {
-    Notebook, Menu as IconMenu, CirclePlus, Setting, House, Delete, Plus, Star, StarFilled,
-    ArrowLeft, MoreFilled, Notification
+    Menu as IconMenu, Star,
+    MoreFilled, Notification
 } from '@element-plus/icons-vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { ArrowDown } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const spaceId = route.params.spaceId as string;

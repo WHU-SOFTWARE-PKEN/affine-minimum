@@ -4,7 +4,6 @@ import { useRouteParams } from '@vueuse/router'
 import { ref, onMounted, watchEffect } from 'vue'
 import { assertExists } from '@blocksuite/store'
 
-
 const route = useRoute();
 const router = useRouter()
 // 定义 ref
@@ -44,13 +43,11 @@ definePageMeta({
                 <Header />
             </el-header>
 
-            
             <el-container>
                 <!-- 侧边栏部分 -->
-                <Aside/>
+                    <Aside />
                 <el-main>
                     <Editor :workspace-id="spaceId" :page-id="pid as string" />
-                    
                 </el-main>
             </el-container>
         </el-container>
