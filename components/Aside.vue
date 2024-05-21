@@ -220,7 +220,9 @@ const show =ref(true)
                         </el-sub-menu>
                         <el-sub-menu index="4-2">
                             <template #title>通用设置</template>
-                            <el-menu-item index="4-2-1">语言</el-menu-item>
+                            <nuxt-link to="/settings/commonSettings/language">
+                                <el-menu-item index="4-2-1">语言</el-menu-item>
+                            </nuxt-link>
                             <el-menu-item index="4-2-2">主题</el-menu-item>
                             <el-menu-item index="4-2-3">字体</el-menu-item>
                             <el-menu-item index="4-2-4">导航</el-menu-item>
